@@ -29,7 +29,6 @@ SOURCES += \
         mainwindow.cpp \
     DictVal.cpp \
     Dict.cpp \
-    emptydict.cpp \
     newelement.cpp \
     changeval.cpp
 
@@ -37,13 +36,11 @@ HEADERS += \
         mainwindow.h \
     DictVal.h \
     Dict.h \
-    emptydict.h \
     newelement.h \
     changeval.h
 
 FORMS += \
         mainwindow.ui \
-    emptydict.ui \
     newelement.ui \
     changeval.ui
 

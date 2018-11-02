@@ -15,7 +15,7 @@ void Dict::set_pDict(std::vector<DictVal *> *_pDict) {
     Dict::_pDict = new std::vector<DictVal*>(*_pDict);
 }
 
-Dict *Dict::createEmpty() {
+Dict* Dict::createEmpty() {
     Dict * dc = new Dict();
     return dc;
 }

@@ -5,7 +5,9 @@
 #include "Dict.h"
 #include <QDir>
 #include <QDialog>
-
+#include <QMessageBox>
+#include <QInputDialog>
+#include "newelement.h"
 namespace Ui {
 class MainWindow;
 }
@@ -18,13 +20,23 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
      Dict * pDict;
+     void loadKeys(QString dictName);
+     bool isSaved();
+     void turnUnsaved();
 
 private slots:
     void on_pushButton_Empty_clicked();
 
+    void on_pushButton_Load_clicked();
+
+    void on_pushButton_Add_clicked();
+
+    void get_data(std::tuple<QString,QString>);
+
 private:
     Ui::MainWindow *ui;
-    const QDir DIRECTORY = QDir("C:\\Users\\araka\\Documents\\Coursework2\\Dicts\\");
+    const QDir _DIRECTORY = QDir("C:\\Users\\araka\\Documents\\Coursework2\\Dicts\\");
+    bool _saved = true;
 };
 
 #endif // MAINWINDOW_H
