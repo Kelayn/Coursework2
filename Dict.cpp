@@ -32,9 +32,15 @@ int Dict::addElem(QString key, QString value) {
                         newHead = newHead->get_pNext();
                     while (newHead->get_pNext() != nullptr);
                     newHead->set_pNext(new DictVal(value));
+                    dc = nullptr;
+                    newHead = nullptr;
                     return 0;
                 }
-                else return 1;
+                else {
+                    dc = nullptr;
+                    newHead = nullptr;
+                    return 1;
+                }
             }
         }
         if (newHead == nullptr) {
@@ -42,6 +48,7 @@ int Dict::addElem(QString key, QString value) {
             if (!value.isEmpty())
                 newHead->set_pNext(new DictVal(value));
             dc->push_back(newHead);
+            dc = nullptr;
             return 0;
         }
     }
@@ -72,6 +79,8 @@ std::vector<QString> Dict::delByKey(QString key) {
         dc->erase(dc->begin()+delInd);
         return vecVals;
     }
+    cur = nullptr;
+    dc = nullptr;
     return vecVals;
 }
 
@@ -84,6 +93,7 @@ DictVal* Dict::findByKey(QString key) const {
             break;
         }
     }
+    dc = nullptr;
     return dv;
 }
 
@@ -97,6 +107,7 @@ QString Dict::changeVal(QString key, QString oldValue, QString newValue) {
         return oldVal;
     }
     QString empty;
+    cur = nullptr;
     return empty;
 }
 
@@ -124,6 +135,7 @@ void quickSort(std::vector<DictVal*> &vDV, int low, int high){
 void Dict::sort() {
     Dict dc = Dict(*this);
     quickSort(*dc.get_pDict(),0,dc.get_pDict()->size()-1);
+    dc = nullptr;
 }
 
 Dict::~Dict() {
@@ -137,3 +149,57 @@ Dict::Dict(const Dict &obj) {
     }
 }
 
+
+void Dict::load(QString filename){
+    QRegExp rx("(\")");
+    QFile file("C:\\Users\\araka\\Documents\\Coursework2\\Dicts\\" + filename);
+    file.open(QIODevice::ReadOnly);
+    QTextStream qts(&file);
+    auto dc = this->get_pDict();
+    while (!qts.atEnd()) {
+            QString qs;
+            qs = qts.readLine();
+            auto valsList = qs.split(rx);
+            DictVal *pHead = new DictVal();
+            pHead->set_val(valsList[0]);
+            dc->push_back(pHead);
+                for (int i = 1; i<valsList.size(); i++){
+                    DictVal *pDv = new DictVal;
+                    while(pHead->get_pNext()!=nullptr)
+                        pHead = pHead->get_pNext();
+                    pDv->set_val(valsList[i]);
+                    pHead->set_pNext(pDv);
+                    pDv = nullptr;
+                }
+                pHead = nullptr;
+        }
+    dc = nullptr;
+}
+
+void Dict::save(QString filename){
+    auto dc = this->get_pDict();
+    QString elementList = "{";
+    if(dc!=nullptr && dc->size()>0){
+        for(auto key: *dc){
+            elementList += "\"" + key->get_val() + "\""+":[";
+            key = key->get_pNext();
+            while(key != nullptr){
+                elementList += "\"" + key->get_val() + "\"" + ",";
+                key = key->get_pNext();
+            }
+            elementList += ",\n";
+        }
+
+        QFile file("C:\\Users\\araka\\Documents\\Coursework2\\Dicts\\" + filename + "txt");
+        file.open(QIODevice::WriteOnly);
+        QTextStream qts(&file);
+        qts<<elementList;
+        file.close();
+    }
+    else{
+        QMessageBox msBox;
+        msBox.setText("Не удалось сохранить.");
+        msBox.exec();
+    }
+    dc = nullptr;
+}

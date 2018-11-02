@@ -5,6 +5,10 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include <QMessageBox>
+#include <QTextStream>
+#include <QFile>
+#include <QRegExp>
 
 class Dict {
 private:
@@ -22,7 +26,7 @@ public:
 
     void set_pDict(std::vector<DictVal *> *_pDict);
 
-    Dict* createEmpty(); // Returns pt to empty dict
+    static Dict* createEmpty(); // Returns pt to empty dict
 
     int addElem(QString key, QString value=""); // Returns 0 if ok, -1 if key is empty and 1 if key is duplicate
                                                     // and val is empty
@@ -35,6 +39,9 @@ public:
 
     void sort();
 
+    void save(QString filename);
+
+    void load(QString filename);
 };
 
 

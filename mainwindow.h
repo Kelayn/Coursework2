@@ -33,6 +33,8 @@ private slots:
 
     void get_data(std::tuple<QString,QString>);
 
+    void on_pushButton_KeyF_clicked();
+
 private:
     Ui::MainWindow *ui;
     const QDir _DIRECTORY = QDir("C:\\Users\\araka\\Documents\\Coursework2\\Dicts\\");
