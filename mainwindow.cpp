@@ -131,3 +131,30 @@ void MainWindow::on_pushButton_Save_clicked()
     msBox.setText("Сохранено.");
     msBox.exec();
 }
+
+void MainWindow::on_pushButton_KeyDel_clicked()
+{
+    if(ui->listWidget_Keys->selectedItems().size()==0){
+        QMessageBox msBox;
+        msBox.setText("Вы не выбрали ни одного ключа.\nВыберите один.");
+        msBox.exec();
+        return;
+    }
+
+    auto items = ui->listWidget_Keys->selectedItems();
+    DictVal *cur = nullptr;
+    ui->listWidget_Values->clear();
+    for (auto a: *this->pDict->get_pDict()){
+        if(a->get_val()==items[0]->text()){
+            cur = a;
+            a = nullptr;
+            break;
+        }
+    }
+    this->pDict->delByKey(cur->get_val());
+    ui->listWidget_Dicts->removeItemWidget(ui->listWidget_Keys->selectedItems()[0]);
+}
+
+
+
+
