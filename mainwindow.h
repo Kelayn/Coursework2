@@ -35,6 +35,8 @@ private slots:
 
     void on_pushButton_KeyF_clicked();
 
+    void on_pushButton_Save_clicked();
+
 private:
     Ui::MainWindow *ui;
     const QDir _DIRECTORY = QDir("C:\\Users\\araka\\Documents\\Coursework2\\Dicts\\");

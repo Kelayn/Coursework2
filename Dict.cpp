@@ -151,7 +151,6 @@ Dict::Dict(const Dict &obj) {
 
 
 void Dict::load(QString filename){
-    QRegExp rx("(\")");
     QFile file("C:\\Users\\araka\\Documents\\Coursework2\\Dicts\\" + filename);
     file.open(QIODevice::ReadOnly);
     QTextStream qts(&file);
@@ -159,7 +158,7 @@ void Dict::load(QString filename){
     while (!qts.atEnd()) {
             QString qs;
             qs = qts.readLine();
-            auto valsList = qs.split(rx);
+            auto valsList = qs.split("\"");
             DictVal *pHead = new DictVal();
             pHead->set_val(valsList[0]);
             dc->push_back(pHead);
@@ -178,19 +177,19 @@ void Dict::load(QString filename){
 
 void Dict::save(QString filename){
     auto dc = this->get_pDict();
-    QString elementList = "{";
+    QString elementList = "";
     if(dc!=nullptr && dc->size()>0){
         for(auto key: *dc){
-            elementList += "\"" + key->get_val() + "\""+":[";
+            elementList += key->get_val() + "\"";
             key = key->get_pNext();
             while(key != nullptr){
-                elementList += "\"" + key->get_val() + "\"" + ",";
+                elementList += key->get_val() + "\"";
                 key = key->get_pNext();
             }
-            elementList += ",\n";
+            elementList += "AAA";
         }
 
-        QFile file("C:\\Users\\araka\\Documents\\Coursework2\\Dicts\\" + filename + "txt");
+        QFile file("C:\\Users\\araka\\Documents\\Coursework2\\Dicts\\" + filename + ".txt");
         file.open(QIODevice::WriteOnly);
         QTextStream qts(&file);
         qts<<elementList;

@@ -27,7 +27,10 @@ void MainWindow::turnUnsaved(){
 void MainWindow::loadKeys(QString dictName){
     ui->listWidget_Keys->clear();
     Dict *dc = new Dict();
-    dc->load(dictName);
+    if(pDict == nullptr)
+        dc->load(dictName);
+    else
+        dc = pDict;
     for(auto key:*dc->get_pDict()){
         ui->listWidget_Keys->addItem(key->get_val());
     }
@@ -35,7 +38,6 @@ void MainWindow::loadKeys(QString dictName){
 
 void MainWindow::on_pushButton_Empty_clicked()
 {
-
     QString text = QInputDialog::getText(this,"Создание нового словаря","Введите название словаря");
     ui->dictNameLabel->setText(text);
     pDict = Dict::createEmpty();
@@ -62,6 +64,9 @@ void MainWindow::on_pushButton_Load_clicked()
     }
     auto items = ui->listWidget_Dicts->selectedItems();
     ui->dictNameLabel->setText(items[0]->text());
+    Dict *dc = new Dict();
+    dc->load(ui->dictNameLabel->text());
+    pDict = dc;
     loadKeys(ui->dictNameLabel->text());
 }
 
@@ -79,8 +84,9 @@ void MainWindow::on_pushButton_Add_clicked()
 }
 
 void MainWindow::get_data(std::tuple<QString,QString> t){
+    pDict->addElem(std::get<0>(t),std::get<1>(t));
     ui->listWidget_Keys->addItem(std::get<0>(t));
-    ui->listWidget_Values->addItem(std::get<1>(t));
+    loadKeys(ui->dictNameLabel->text());
 }
 
 void MainWindow::on_pushButton_KeyF_clicked()
@@ -94,6 +100,7 @@ void MainWindow::on_pushButton_KeyF_clicked()
 
     auto items = ui->listWidget_Keys->selectedItems();
     DictVal *cur = nullptr;
+    ui->listWidget_Values->clear();
     for (auto a: *this->pDict->get_pDict()){
         if(a->get_val()==items[0]->text()){
             cur = a;
@@ -101,6 +108,7 @@ void MainWindow::on_pushButton_KeyF_clicked()
             break;
         }
     }
+
     if(cur!=nullptr){
         cur = cur->get_pNext();
         while(cur!=nullptr){
@@ -108,4 +116,18 @@ void MainWindow::on_pushButton_KeyF_clicked()
             cur = cur->get_pNext();
         }
     }
+}
+
+void MainWindow::on_pushButton_Save_clicked()
+{
+    if(pDict->get_pDict()==nullptr){
+        QMessageBox msBox;
+        msBox.setText("Вы сохраняете пустой словарь. Это невозможно.");
+        msBox.exec();
+        return;
+    }
+    pDict->save(ui->dictNameLabel->text());
+    QMessageBox msBox;
+    msBox.setText("Сохранено.");
+    msBox.exec();
 }
