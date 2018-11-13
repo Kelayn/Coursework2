@@ -15,6 +15,13 @@ public:
     explicit ChangeVal(QWidget *parent = nullptr);
     ~ChangeVal();
 
+signals:
+    void send_data1(QString);
+
+private slots:
+    void on_buttonBox_accepted();
+
+
 private:
     Ui::ChangeVal *ui;
 };

@@ -12,3 +12,10 @@ ChangeVal::~ChangeVal()
 {
     delete ui;
 }
+
+void ChangeVal::on_buttonBox_accepted()
+{
+    QString newValue = ui->lineEdit->text();
+    emit send_data1(newValue);
+    this->close();
+}

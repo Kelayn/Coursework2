@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include <QInputDialog>
 #include "newelement.h"
+#include "changeval.h"
 namespace Ui {
 class MainWindow;
 }
@@ -33,6 +34,8 @@ private slots:
 
     void get_data(std::tuple<QString,QString>);
 
+    void get_newVal(QString);
+
     void on_pushButton_KeyF_clicked();
 
     void on_pushButton_Save_clicked();
@@ -41,9 +44,11 @@ private slots:
 
     void on_pushButton_Change_clicked();
 
+    void on_pushButton_Sort_clicked();
+
 private:
     Ui::MainWindow *ui;
-    const QDir _DIRECTORY = QDir("C:\\Users\\araka\\Documents\\Coursework2\\Dicts\\");
+    const QDir _DIRECTORY = QDir("../Coursework2/Dicts");
     bool _saved = true;
 };
 

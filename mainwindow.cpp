@@ -167,10 +167,21 @@ void MainWindow::on_pushButton_KeyDel_clicked()
 }
 
 
-
-
-
 void MainWindow::on_pushButton_Change_clicked()
 {
+    auto* changeVal = new ChangeVal();
+    connect(changeVal,SIGNAL(send_data1(QString)), this, SLOT(get_newVal(QString)));
+    changeVal->show();
+}
+
+void MainWindow::get_newVal(QString newVal){
+    pDict->changeVal(ui->listWidget_Keys->selectedItems()[0]->text(),ui->listWidget_Values->selectedItems()[0]->text(), newVal);
+    loadKeys(ui->dictNameLabel->text());
+}
+
+
+void MainWindow::on_pushButton_Sort_clicked()
+{
+   ui->listWidget_Keys->sortItems();
 
 }

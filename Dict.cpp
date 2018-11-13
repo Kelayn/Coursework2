@@ -100,8 +100,17 @@ DictVal* Dict::findByKey(QString key) const {
 QString Dict::changeVal(QString key, QString oldValue, QString newValue) {
     auto cur = Dict::findByKey(key);
     if (cur!=nullptr){
-        while(cur->get_val()!=oldValue)
+        while(cur!=nullptr){
+            if (cur->get_val()==oldValue)
+                break;
             cur = cur->get_pNext();
+        }
+        if (cur == nullptr){
+            QMessageBox msBox;
+            msBox.setText("Значение не найдено.");
+            msBox.exec();
+            return "";
+        }
         QString oldVal = cur->get_val();
         cur->set_val(newValue);
         return oldVal;
@@ -133,9 +142,8 @@ void quickSort(std::vector<DictVal*> &vDV, int low, int high){
 }
 
 void Dict::sort() {
-    Dict dc = Dict(*this);
+    Dict dc(*this);
     quickSort(*dc.get_pDict(),0,dc.get_pDict()->size()-1);
-    dc = nullptr;
 }
 
 Dict::~Dict() {
@@ -151,7 +159,7 @@ Dict::Dict(const Dict &obj) {
 
 
 void Dict::load(QString filename){
-    QFile file("C:\\Users\\araka\\Documents\\Coursework2\\Dicts\\" + filename + ".txt");
+    QFile file("../Coursework2/Dicts/" + filename + ".txt");
     file.open(QIODevice::ReadOnly);
     QTextStream qts(&file);
     auto dc = this->get_pDict();
@@ -189,7 +197,7 @@ void Dict::save(QString filename){
             elementList += "\n";
         }
 
-        QFile file("C:\\Users\\araka\\Documents\\Coursework2\\Dicts\\" + filename + ".txt");
+        QFile file("../Coursework2/Dicts/" + filename + ".txt");
         file.open(QIODevice::WriteOnly);
         QTextStream qts(&file);
         qts<<elementList;
