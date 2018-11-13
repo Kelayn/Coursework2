@@ -22,7 +22,7 @@ public:
      Dict * pDict;
      void loadKeys(QString dictName);
      bool isSaved();
-     void turnUnsaved();
+     void changeSaved();
 
 private slots:
     void on_pushButton_Empty_clicked();
@@ -38,6 +38,8 @@ private slots:
     void on_pushButton_Save_clicked();
 
     void on_pushButton_KeyDel_clicked();
+
+    void on_pushButton_Change_clicked();
 
 private:
     Ui::MainWindow *ui;

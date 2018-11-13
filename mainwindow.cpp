@@ -8,7 +8,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->listWidget_Dicts->addItems(_DIRECTORY.entryList(QDir::Files));
+    auto entryList = _DIRECTORY.entryList(QDir::Files);
+    for(int i = 0; i < entryList.size(); i++){
+        entryList[i] = entryList[i].chopped(entryList[i].size()-entryList[i].indexOf("txt")+1);
+    }
+    ui->listWidget_Dicts->addItems(entryList);
 }
 
 MainWindow::~MainWindow()
@@ -20,12 +24,13 @@ bool MainWindow::isSaved(){
     return _saved;
 }
 
-void MainWindow::turnUnsaved(){
-    _saved = false;
+void MainWindow::changeSaved(){
+    _saved = !_saved;
 }
 
 void MainWindow::loadKeys(QString dictName){
     ui->listWidget_Keys->clear();
+    ui->listWidget_Values->clear();
     Dict *dc = new Dict();
     if(pDict == nullptr)
         dc->load(dictName);
@@ -34,14 +39,6 @@ void MainWindow::loadKeys(QString dictName){
     for(auto key:*dc->get_pDict()){
         ui->listWidget_Keys->addItem(key->get_val());
     }
-}
-
-void MainWindow::on_pushButton_Empty_clicked()
-{
-    QString text = QInputDialog::getText(this,"Создание нового словаря","Введите название словаря");
-    ui->dictNameLabel->setText(text);
-    pDict = Dict::createEmpty();
-    turnUnsaved();
 }
 
 void MainWindow::on_pushButton_Load_clicked()
@@ -60,7 +57,7 @@ void MainWindow::on_pushButton_Load_clicked()
                                        QMessageBox::Discard);
         if(choice == QMessageBox::Discard)
             return;
-
+        changeSaved();
     }
     auto items = ui->listWidget_Dicts->selectedItems();
     ui->dictNameLabel->setText(items[0]->text());
@@ -69,6 +66,33 @@ void MainWindow::on_pushButton_Load_clicked()
     pDict = dc;
     loadKeys(ui->dictNameLabel->text());
 }
+
+void MainWindow::on_pushButton_Save_clicked()
+{
+    if(pDict->get_pDict()==nullptr){
+        QMessageBox msBox;
+        msBox.setText("Вы сохраняете пустой словарь. Это невозможно.");
+        msBox.exec();
+        return;
+    }
+    pDict->save(ui->dictNameLabel->text());
+    ui->listWidget_Dicts->clear();
+    auto entryList = _DIRECTORY.entryList(QDir::Files);
+    for(int i = 0; i < entryList.size(); i++){
+        entryList[i] = entryList[i].chopped(entryList[i].size()-entryList[i].indexOf("txt")+1);
+    }
+    ui->listWidget_Dicts->addItems(entryList);
+}
+
+
+void MainWindow::on_pushButton_Empty_clicked()
+{
+    QString text = QInputDialog::getText(this,"Создание нового словаря","Введите название словаря");
+    ui->dictNameLabel->setText(text);
+    pDict = Dict::createEmpty();
+    changeSaved();
+}
+
 
 void MainWindow::on_pushButton_Add_clicked()
 {
@@ -118,19 +142,6 @@ void MainWindow::on_pushButton_KeyF_clicked()
     }
 }
 
-void MainWindow::on_pushButton_Save_clicked()
-{
-    if(pDict->get_pDict()==nullptr){
-        QMessageBox msBox;
-        msBox.setText("Вы сохраняете пустой словарь. Это невозможно.");
-        msBox.exec();
-        return;
-    }
-    pDict->save(ui->dictNameLabel->text());
-    QMessageBox msBox;
-    msBox.setText("Сохранено.");
-    msBox.exec();
-}
 
 void MainWindow::on_pushButton_KeyDel_clicked()
 {
@@ -152,9 +163,14 @@ void MainWindow::on_pushButton_KeyDel_clicked()
         }
     }
     this->pDict->delByKey(cur->get_val());
-    ui->listWidget_Dicts->removeItemWidget(ui->listWidget_Keys->selectedItems()[0]);
+    loadKeys(ui->dictNameLabel->text());
 }
 
 
 
 
+
+void MainWindow::on_pushButton_Change_clicked()
+{
+
+}

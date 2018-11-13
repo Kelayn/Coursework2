@@ -151,7 +151,7 @@ Dict::Dict(const Dict &obj) {
 
 
 void Dict::load(QString filename){
-    QFile file("C:\\Users\\araka\\Documents\\Coursework2\\Dicts\\" + filename);
+    QFile file("C:\\Users\\araka\\Documents\\Coursework2\\Dicts\\" + filename + ".txt");
     file.open(QIODevice::ReadOnly);
     QTextStream qts(&file);
     auto dc = this->get_pDict();
@@ -186,7 +186,7 @@ void Dict::save(QString filename){
                 elementList += key->get_val() + "\"";
                 key = key->get_pNext();
             }
-            elementList += "AAA";
+            elementList += "\n";
         }
 
         QFile file("C:\\Users\\araka\\Documents\\Coursework2\\Dicts\\" + filename + ".txt");
@@ -194,6 +194,9 @@ void Dict::save(QString filename){
         QTextStream qts(&file);
         qts<<elementList;
         file.close();
+        QMessageBox msBox;
+        msBox.setText("Cохранено.");
+        msBox.exec();
     }
     else{
         QMessageBox msBox;
