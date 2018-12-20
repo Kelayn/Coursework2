@@ -48,7 +48,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    const QDir _DIRECTORY = QDir("../Coursework2/Dicts");
+    const QDir _DIRECTORY = QDir("./Dicts");
     bool _saved = true;
 };
 

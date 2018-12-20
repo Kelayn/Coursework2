@@ -159,7 +159,7 @@ Dict::Dict(const Dict &obj) {
 
 
 void Dict::load(QString filename){
-    QFile file("../Coursework2/Dicts/" + filename + ".txt");
+    QFile file("./Dicts/" + filename + ".txt");
     file.open(QIODevice::ReadOnly);
     QTextStream qts(&file);
     auto dc = this->get_pDict();
@@ -197,7 +197,7 @@ void Dict::save(QString filename){
             elementList += "\n";
         }
 
-        QFile file("../Coursework2/Dicts/" + filename + ".txt");
+        QFile file("./Dicts/" + filename + ".txt");
         file.open(QIODevice::WriteOnly);
         QTextStream qts(&file);
         qts<<elementList;
